@@ -8,9 +8,9 @@ Description: |
 
 Parameters:
   imageID:
-    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
-  
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64"
+
   instanceType:
     Description: Select your instance type.
     Type: String
@@ -24,22 +24,20 @@ Parameters:
     Description: Select your key pair
     Type: AWS::EC2::KeyPair::KeyName
 
-
   tagKeyParam:
     Description: type your key for ec2 name
     Type: String
     NoEcho: true
 Resources:
-  
   myWebServer:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref imageID
       InstanceType: !Ref instanceType
       KeyName: !Ref myKeyName
-      SecurityGroupIds: 
-        - !Ref mySecGrp  #!GetAtt mySecGrp.GroupId
-      Tags: 
+      SecurityGroupIds:
+        - !Ref mySecGrp #!GetAtt mySecGrp.GroupId
+      Tags:
         - Key: !Ref tagKeyParam
           Value: !Sub ${AWS::StackName}
       UserData: !Base64 |
@@ -61,7 +59,7 @@ Resources:
     Properties:
       GroupDescription: ssh and http # Required
       GroupName: osvaldo_kitten_101_sg_grp
-      SecurityGroupIngress: 
+      SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
@@ -77,4 +75,3 @@ Outputs:
     Value: !Sub
       - http://${PublicDNS}
       - PublicDNS: !GetAtt myWebServer.PublicDnsName
-   
